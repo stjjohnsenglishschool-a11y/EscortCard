@@ -424,24 +424,6 @@
                     <div class="error-message" id="studentPhotoError"></div>
                 </div>
                 
-                <!-- Father Photo -->
-                <div class="form-group">
-                    <label>
-                        Father Photo
-                        <span class="required">*</span>
-                    </label>
-                    <div class="photo-upload-section" onclick="document.getElementById('fatherPhoto').click()">
-                        <div class="upload-icon">
-                            <i class="fas fa-camera"></i>
-                        </div>
-                        <div class="upload-text">Click to upload or take photo</div>
-                        <div class="upload-text" style="font-size: 0.8rem; color: #999; margin-top: 5px;">413 × 531 px</div>
-                        <input type="file" id="fatherPhoto" name="fatherPhoto" accept="image/*" required>
-                    </div>
-                    <div id="fatherPhotoPreview" class="photo-preview"></div>
-                    <div class="error-message" id="fatherPhotoError"></div>
-                </div>
-                
                 <!-- Mother Photo -->
                 <div class="form-group">
                     <label>
@@ -458,26 +440,6 @@
                     </div>
                     <div id="motherPhotoPreview" class="photo-preview"></div>
                     <div class="error-message" id="motherPhotoError"></div>
-                </div>
-                
-                <!-- Father Name -->
-                <div class="form-group">
-                    <label for="fatherName">
-                        Father Name
-                        <span class="required">*</span>
-                    </label>
-                    <input type="text" id="fatherName" name="fatherName" placeholder="Enter father name" required>
-                    <div class="error-message" id="fatherNameError"></div>
-                </div>
-                
-                <!-- Father Contact -->
-                <div class="form-group">
-                    <label for="fatherContact">
-                        Father Contact (WhatsApp)
-                        <span class="required">*</span>
-                    </label>
-                    <input type="tel" id="fatherContact" name="fatherContact" placeholder="Enter 10-digit mobile number" required>
-                    <div class="error-message" id="fatherContactError"></div>
                 </div>
                 
                 <!-- Mother Name -->
@@ -556,7 +518,6 @@
 
         const photoFields = {
             'studentPhoto': { previewId: 'studentPhotoPreview', errorId: 'studentPhotoError' },
-            'fatherPhoto': { previewId: 'fatherPhotoPreview', errorId: 'fatherPhotoError' },
             'motherPhoto': { previewId: 'motherPhotoPreview', errorId: 'motherPhotoError' }
         };
 
@@ -573,7 +534,6 @@
 
         // Apply auto-capitalization to name fields
         autoCapitalize(document.getElementById('studentName'));
-        autoCapitalize(document.getElementById('fatherName'));
         autoCapitalize(document.getElementById('motherName'));
 
         // Photo upload and resize
@@ -705,7 +665,7 @@
             }
 
             // Photos
-            ['studentPhoto', 'fatherPhoto', 'motherPhoto'].forEach(photoField => {
+            ['studentPhoto', 'motherPhoto'].forEach(photoField => {
                 const input = document.getElementById(photoField);
                 if (!input.value && !input.dataset.resized) {
                     showError(photoField, 'Upload pic 413 × 531 px');
@@ -714,27 +674,6 @@
                     clearError(photoFields[photoField].errorId);
                 }
             });
-
-            // Father Name
-            const fatherName = document.getElementById('fatherName').value.trim();
-            if (!fatherName) {
-                showError('fatherName', 'Father name is required');
-                isValid = false;
-            } else {
-                clearError('fatherNameError');
-            }
-
-            // Father Contact
-            const fatherContact = document.getElementById('fatherContact').value.trim();
-            if (!fatherContact) {
-                showError('fatherContact', 'Father contact is required');
-                isValid = false;
-            } else if (!validatePhoneNumber(fatherContact)) {
-                showError('fatherContact', 'Use WhatsApp Number Please');
-                isValid = false;
-            } else {
-                clearError('fatherContactError');
-            }
 
             // Mother Name
             const motherName = document.getElementById('motherName').value.trim();
@@ -770,7 +709,7 @@
         }
 
         // Clear errors on input
-        ['studentName', 'studentClass', 'rollNumber', 'fatherName', 'fatherContact', 'motherName', 'motherContact', 'emailAddress'].forEach(fieldId => {
+        ['studentName', 'studentClass', 'rollNumber', 'motherName', 'motherContact', 'emailAddress'].forEach(fieldId => {
             document.getElementById(fieldId).addEventListener('input', function() {
                 clearError(fieldId);
             });
@@ -805,7 +744,6 @@
 
             // Read photos as Base64
             let studentPhotoBase64 = '';
-            let fatherPhotoBase64 = '';
             let motherPhotoBase64 = '';
 
             try {
@@ -813,12 +751,6 @@
                 const studentPhotoFile = document.getElementById('studentPhoto').files[0];
                 if (studentPhotoFile) {
                     studentPhotoBase64 = await readFileAsBase64(studentPhotoFile);
-                }
-
-                // Read father photo
-                const fatherPhotoFile = document.getElementById('fatherPhoto').files[0];
-                if (fatherPhotoFile) {
-                    fatherPhotoBase64 = await readFileAsBase64(fatherPhotoFile);
                 }
 
                 // Read mother photo
@@ -833,15 +765,12 @@
                 formData.append('studentName', document.getElementById('studentName').value.trim());
                 formData.append('studentClass', document.getElementById('studentClass').value);
                 formData.append('rollNumber', document.getElementById('rollNumber').value.trim());
-                formData.append('fatherName', document.getElementById('fatherName').value.trim());
-                formData.append('fatherContact', document.getElementById('fatherContact').value.trim());
                 formData.append('motherName', document.getElementById('motherName').value.trim());
                 formData.append('motherContact', document.getElementById('motherContact').value.trim());
                 formData.append('emailAddress', document.getElementById('emailAddress').value.trim());
                 
                 // Add base64 photo data
                 if (studentPhotoBase64) formData.append('studentPhotoBase64', studentPhotoBase64);
-                if (fatherPhotoBase64) formData.append('fatherPhotoBase64', fatherPhotoBase64);
                 if (motherPhotoBase64) formData.append('motherPhotoBase64', motherPhotoBase64);
 
                 console.log('Submitting form to: ' + WEB_APP_URL);
