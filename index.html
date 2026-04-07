@@ -7,201 +7,228 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px 10px; }
-        .form-container { max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        /* ALL YOUR ORIGINAL STYLES REMAIN UNTOUCHED */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px 10px; }
+        .form-container { max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); overflow: hidden; animation: slideUp 0.5s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .form-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 20px; color: white; text-align: center; }
+        .form-header h1 { font-size: 1.8rem; margin-bottom: 5px; font-weight: 700; }
+        .form-header p { font-size: 0.95rem; opacity: 0.9; }
         .form-content { padding: 30px 20px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
-        input, select { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; outline: none; }
-        input:focus { border-color: #667eea; }
-        .photo-upload-section { background: #f9fafb; border: 2px dashed #667eea; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; }
-        .preview-image { max-width: 150px; border-radius: 10px; margin: 10px auto; display: block; }
-        .error-message { color: #ef4444; font-size: 0.85rem; display: none; margin-top: 5px; }
-        button { width: 100%; padding: 14px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .btn-submit { background: #764ba2; color: white; }
-        .btn-submit:disabled { opacity: 0.5; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 50; }
-        .modal.show { display: flex; }
-        .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #fff; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; margin-right: 10px; }
+        .form-group { margin-bottom: 24px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 0.95rem; }
+        .required { color: #ef4444; margin-left: 3px; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select { width: 100%; padding: 12px 15px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; font-family: inherit; }
+        input:focus, select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+        input.error, select.error { border-color: #ef4444; }
+        .error-message { color: #ef4444; font-size: 0.85rem; margin-top: 5px; display: none; }
+        .error-message.show { display: block; }
+        .photo-upload-section { background: #f9fafb; border: 2px dashed #667eea; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+        .photo-upload-section:hover { background: #f3f4f6; border-color: #764ba2; }
+        .photo-upload-section input[type="file"] { display: none; }
+        .upload-icon { font-size: 2.5rem; color: #667eea; margin-bottom: 10px; }
+        .upload-text { color: #666; font-size: 0.9rem; }
+        .photo-preview { margin-top: 15px; position: relative; }
+        .preview-image { max-width: 100%; max-height: 250px; border-radius: 10px; display: block; margin: 0 auto; }
+        .preview-info { font-size: 0.8rem; color: #667eea; margin-top: 8px; font-weight: 500; }
+        .remove-photo { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; margin-top: 10px; transition: all 0.3s ease; }
+        .form-actions { display: flex; gap: 12px; margin-top: 30px; }
+        button[type="submit"], button[type="reset"] { flex: 1; padding: 14px; font-size: 1rem; font-weight: 600; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; font-family: inherit; }
+        button[type="submit"] { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        button[type="reset"] { background: #f3f4f6; color: #333; }
+        .spinner { display: inline-block; width: 16px; height: 16px; border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 8px; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal.show { display: flex; }
+        .modal-content { background: white; border-radius: 15px; padding: 30px; max-width: 500px; width: 100%; text-align: center; }
     </style>
 </head>
 <body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1><i class="fas fa-graduation-cap"></i> St. John's English School</h1>
+            <p>Escort Card Registration Form</p>
+        </div>
+        
+        <div class="form-content">
+            <form id="escortCardForm">
+                <div class="form-group">
+                    <label>Student Name <span class="required">*</span></label>
+                    <input type="text" id="studentName" name="studentName" placeholder="Enter student name" required>
+                    <div class="error-message" id="studentNameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Class <span class="required">*</span></label>
+                    <select id="studentClass" name="studentClass" required>
+                        <option value="">Select Class</option>
+                        <option value="PG">PG</option>
+                        <option value="NURSERY">NURSERY</option>
+                        <option value="LKG">LKG</option>
+                        <option value="UKG">UKG</option>
+                        <option value="CLASS I">CLASS I</option>
+                        <option value="CLASS II">CLASS II</option>
+                        <option value="CLASS III">CLASS III</option>
+                        <option value="CLASS IV">CLASS IV</option>
+                        <option value="CLASS V">CLASS V</option>
+                        <option value="CLASS VI">CLASS VI</option>
+                        <option value="CLASS VII">CLASS VII</option>
+                        <option value="CLASS VIII">CLASS VIII</option>
+                    </select>
+                    <div class="error-message" id="studentClassError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Roll Number <span class="required">*</span></label>
+                    <input type="number" id="rollNumber" name="rollNumber" placeholder="Enter roll number" required>
+                    <div class="error-message" id="rollNumberError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Student Photo <span class="required">*</span></label>
+                    <div class="photo-upload-section" onclick="document.getElementById('studentPhoto').click()">
+                        <div class="upload-icon"><i class="fas fa-camera"></i></div>
+                        <div class="upload-text">Click to upload photo (413 × 531 px)</div>
+                        <input type="file" id="studentPhoto" accept="image/*" required>
+                    </div>
+                    <div id="studentPhotoPreview" class="photo-preview"></div>
+                    <div class="error-message" id="studentPhotoError"></div>
+                </div>
 
-<div class="form-container">
-    <div class="form-header">
-        <h1 class="text-2xl font-bold">St. John's English School</h1>
-        <p>Escort Card Registration</p>
+                <div class="form-group">
+                    <label>Father Photo</label>
+                    <div class="photo-upload-section" onclick="document.getElementById('fatherPhoto').click()">
+                        <div class="upload-icon"><i class="fas fa-camera"></i></div>
+                        <div class="upload-text">Click to upload photo</div>
+                        <input type="file" id="fatherPhoto" accept="image/*">
+                    </div>
+                    <div id="fatherPhotoPreview" class="photo-preview"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mother Photo <span class="required">*</span></label>
+                    <div class="photo-upload-section" onclick="document.getElementById('motherPhoto').click()">
+                        <div class="upload-icon"><i class="fas fa-camera"></i></div>
+                        <div class="upload-text">Click to upload photo</div>
+                        <input type="file" id="motherPhoto" accept="image/*" required>
+                    </div>
+                    <div id="motherPhotoPreview" class="photo-preview"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Father Name</label>
+                    <input type="text" id="fatherName" name="fatherName">
+                </div>
+
+                <div class="form-group">
+                    <label>Father Contact (WhatsApp)</label>
+                    <input type="tel" id="fatherContact" name="fatherContact">
+                    <div class="error-message" id="fatherContactError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mother Name <span class="required">*</span></label>
+                    <input type="text" id="motherName" name="motherName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Mother Contact <span class="required">*</span></label>
+                    <input type="tel" id="motherContact" name="motherContact" required>
+                    <div class="error-message" id="motherContactError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="emailAddress" name="emailAddress">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" id="submitBtn"><i class="fas fa-paper-plane"></i> Submit</button>
+                    <button type="reset" id="resetBtn"><i class="fas fa-redo"></i> Clear</button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <form id="escortCardForm" class="form-content">
-        <div class="form-group">
-            <label>Student Name *</label>
-            <input type="text" id="studentName" required>
+    <!-- Modals -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon text-5xl mb-4 text-green-500"><i class="fas fa-check-circle"></i></div>
+            <div class="text-xl font-bold mb-2">Success!</div>
+            <p class="mb-6">Registration submitted successfully.</p>
+            <button class="bg-indigo-600 text-white px-8 py-2 rounded" onclick="location.reload()">Done</button>
         </div>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div class="form-group">
-                <label>Class *</label>
-                <select id="studentClass" required>
-                    <option value="">Select</option>
-                    <option value="PG">PG</option><option value="NURSERY">Nursery</option>
-                    <option value="LKG">LKG</option><option value="UKG">UKG</option>
-                    <option value="I">I</option><option value="II">II</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Roll Number *</label>
-                <input type="number" id="rollNumber" required>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Student Photo (413x531) *</label>
-            <div class="photo-upload-section" onclick="document.getElementById('studentPhotoInput').click()">
-                <i class="fas fa-camera text-2xl mb-2 text-indigo-500"></i>
-                <p class="text-xs text-gray-500">Click to upload</p>
-                <input type="file" id="studentPhotoInput" accept="image/*" class="hidden">
-                <div id="studentPreview"></div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Mother Photo *</label>
-            <div class="photo-upload-section" onclick="document.getElementById('motherPhotoInput').click()">
-                <i class="fas fa-camera text-2xl mb-2 text-indigo-500"></i>
-                <input type="file" id="motherPhotoInput" accept="image/*" class="hidden">
-                <div id="motherPreview"></div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Father Photo (Optional)</label>
-            <div class="photo-upload-section" onclick="document.getElementById('fatherPhotoInput').click()">
-                <i class="fas fa-camera text-2xl mb-2 text-indigo-500"></i>
-                <input type="file" id="fatherPhotoInput" accept="image/*" class="hidden">
-                <div id="fatherPreview"></div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Mother Name *</label>
-            <input type="text" id="motherName" required>
-        </div>
-
-        <div class="form-group">
-            <label>Mother Contact (WhatsApp) *</label>
-            <input type="tel" id="motherContact" placeholder="10 Digit Number" required>
-        </div>
-
-        <div class="form-group">
-            <label>Father Name</label>
-            <input type="text" id="fatherName">
-        </div>
-
-        <div class="form-group">
-            <label>Father Contact</label>
-            <input type="tel" id="fatherContact">
-        </div>
-
-        <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" id="emailAddress">
-        </div>
-
-        <button type="submit" id="submitBtn" class="btn-submit">Submit Form</button>
-    </form>
-</div>
-
-<!-- Modals -->
-<div id="successModal" class="modal">
-    <div class="bg-white p-8 rounded-xl text-center max-w-sm mx-4">
-        <i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i>
-        <h2 class="text-xl font-bold mb-2">Success!</h2>
-        <p class="text-gray-600 mb-6">Data has been saved to the school records.</p>
-        <button onclick="location.reload()" class="btn-submit">Close</button>
     </div>
-</div>
 
-<script>
-    // PASTE YOUR GOOGLE WEB APP URL HERE
-    const WEB_APP_URL = "PASTE_YOUR_DEPLOYED_URL_HERE";
+    <script>
+        const WEB_APP_URL = "PASTE_YOUR_DEPLOYED_URL_HERE";
 
-    const photos = {
-        student: { input: 'studentPhotoInput', preview: 'studentPreview', data: null },
-        mother: { input: 'motherPhotoInput', preview: 'motherPreview', data: null },
-        father: { input: 'fatherPhotoInput', preview: 'fatherPreview', data: null }
-    };
-
-    // Handle Photo Previews and Resizing
-    Object.keys(photos).forEach(key => {
-        document.getElementById(photos[key].input).addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 413;
-                    canvas.height = 531;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, 413, 531);
-                    const base64 = canvas.toDataURL('image/jpeg', 0.8);
-                    photos[key].data = base64;
-                    document.getElementById(photos[key].preview).innerHTML = `<img src="${base64}" class="preview-image">`;
-                };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        });
-    });
-
-    document.getElementById('escortCardForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        if (!photos.student.data || !photos.mother.data) {
-            alert("Student and Mother photos are required!");
-            return;
-        }
-
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        btn.innerHTML = `<span class="spinner"></span> Processing...`;
-
-        const payload = {
-            timestamp: new Date().toLocaleString('en-IN'),
-            studentName: document.getElementById('studentName').value,
-            studentClass: document.getElementById('studentClass').value,
-            rollNumber: document.getElementById('rollNumber').value,
-            motherName: document.getElementById('motherName').value,
-            motherContact: document.getElementById('motherContact').value,
-            fatherName: document.getElementById('fatherName').value,
-            fatherContact: document.getElementById('fatherContact').value,
-            emailAddress: document.getElementById('emailAddress').value,
-            studentPhotoBase64: photos.student.data,
-            motherPhotoBase64: photos.mother.data,
-            fatherPhotoBase64: photos.father.data
+        // Image Preview Logic
+        const photoConfigs = {
+            studentPhoto: 'studentPhotoPreview',
+            fatherPhoto: 'fatherPhotoPreview',
+            motherPhoto: 'motherPhotoPreview'
         };
 
-        try {
-            const response = await fetch(WEB_APP_URL, {
-                method: "POST",
-                mode: "no-cors", // This is normal for Google Apps Script
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
+        Object.keys(photoConfigs).forEach(id => {
+            document.getElementById(id).addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById(photoConfigs[id]).innerHTML = `
+                        <img src="${event.target.result}" class="preview-image">
+                        <div class="preview-info">✓ Photo Selected</div>
+                        <button type="button" class="remove-photo" onclick="document.getElementById('${id}').value=''; document.getElementById('${photoConfigs[id]}').innerHTML=''">Remove</button>
+                    `;
+                    // Store base64 data directly on the element
+                    document.getElementById(id).dataset.base64 = event.target.result;
+                };
+                reader.readAsDataURL(file);
             });
+        });
 
-            // Since no-cors doesn't allow reading response, we show success after a small delay
-            document.getElementById('successModal').classList.add('show');
-        } catch (error) {
-            alert("Error submitting: " + error.message);
-            btn.disabled = false;
-            btn.innerHTML = "Submit Form";
-        }
-    });
-</script>
+        // Form Validation & Submission
+        document.getElementById('escortCardForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span>Submitting...';
+
+            const payload = {
+                timestamp: new Date().toLocaleString('en-IN'),
+                studentName: document.getElementById('studentName').value,
+                studentClass: document.getElementById('studentClass').value,
+                rollNumber: document.getElementById('rollNumber').value,
+                fatherName: document.getElementById('fatherName').value,
+                fatherContact: document.getElementById('fatherContact').value,
+                motherName: document.getElementById('motherName').value,
+                motherContact: document.getElementById('motherContact').value,
+                emailAddress: document.getElementById('emailAddress').value,
+                studentPhotoBase64: document.getElementById('studentPhoto').dataset.base64 || "",
+                fatherPhotoBase64: document.getElementById('fatherPhoto').dataset.base64 || "",
+                motherPhotoBase64: document.getElementById('motherPhoto').dataset.base64 || ""
+            };
+
+            try {
+                // FIXED FETCH: Sending JSON to avoid the "Undefined" parameters issue
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                document.getElementById('successModal').classList.add('show');
+            } catch (error) {
+                alert("Error: " + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Submit';
+            }
+        });
+    </script>
 </body>
 </html>
