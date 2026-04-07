@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ALL ORIGINAL STYLES RESTORED */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px 10px; }
         .form-container { max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); overflow: hidden; animation: slideUp 0.5s ease-out; }
@@ -19,30 +18,20 @@
         .form-group { margin-bottom: 24px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; font-size: 0.95rem; }
         .required { color: #ef4444; margin-left: 3px; }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select { width: 100%; padding: 12px 15px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; font-family: inherit; }
+        input, select { width: 100%; padding: 12px 15px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; }
         input:focus, select:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
-        input.error, select.error { border-color: #ef4444; }
-        .error-message { color: #ef4444; font-size: 0.85rem; margin-top: 5px; display: none; }
-        .error-message.show { display: block; }
-        .photo-upload-section { background: #f9fafb; border: 2px dashed #667eea; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
-        .photo-upload-section:hover { background: #f3f4f6; border-color: #764ba2; }
-        .photo-upload-section input[type="file"] { display: none; }
+        .photo-upload-section { background: #f9fafb; border: 2px dashed #667eea; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; }
         .upload-icon { font-size: 2.5rem; color: #667eea; margin-bottom: 10px; }
-        .upload-text { color: #666; font-size: 0.9rem; }
-        .photo-preview { margin-top: 15px; position: relative; }
-        .preview-image { max-width: 100%; max-height: 250px; border-radius: 10px; display: block; margin: 0 auto; }
-        .preview-info { font-size: 0.8rem; color: #667eea; margin-top: 8px; font-weight: 500; }
-        .remove-photo { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; margin-top: 10px; transition: all 0.3s ease; }
+        .preview-image { max-width: 100%; max-height: 250px; border-radius: 10px; display: block; margin: 15px auto; }
+        .remove-photo { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; margin-top: 10px; }
         .form-actions { display: flex; gap: 12px; margin-top: 30px; }
-        button[type="submit"], button[type="reset"] { flex: 1; padding: 14px; font-size: 1rem; font-weight: 600; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; font-family: inherit; }
-        button[type="submit"] { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        button[type="reset"] { background: #f3f4f6; color: #333; }
-        .spinner { display: inline-block; width: 16px; height: 16px; border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 8px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        button[type="submit"] { flex: 2; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; }
+        button[type="reset"] { flex: 1; padding: 14px; background: #f3f4f6; color: #333; border-radius: 10px; cursor: pointer; border: none; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .modal.show { display: flex; }
-        .modal-content { background: white; border-radius: 15px; padding: 30px; max-width: 500px; width: 100%; text-align: center; }
-        .modal-button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 400px; width: 100%; }
+        .spinner { border: 3px solid rgba(255,255,255,.3); border-top: 3px solid #fff; border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -56,8 +45,7 @@
             <form id="escortCardForm">
                 <div class="form-group">
                     <label>Student Name <span class="required">*</span></label>
-                    <input type="text" id="studentName" placeholder="Enter student name" required>
-                    <div class="error-message" id="studentNameError"></div>
+                    <input type="text" id="studentName" required>
                 </div>
                 
                 <div class="form-group">
@@ -72,56 +60,40 @@
                         <option value="CLASS II">CLASS II</option>
                         <option value="CLASS III">CLASS III</option>
                         <option value="CLASS IV">CLASS IV</option>
-                        <option value="CLASS V">CLASS V</option>
-                        <option value="CLASS VI">CLASS VI</option>
-                        <option value="CLASS VII">CLASS VII</option>
-                        <option value="CLASS VIII">CLASS VIII</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
                     <label>Roll Number <span class="required">*</span></label>
-                    <input type="number" id="rollNumber" placeholder="Enter roll number" required>
+                    <input type="number" id="rollNumber" required>
                 </div>
                 
                 <div class="form-group">
                     <label>Student Photo <span class="required">*</span></label>
                     <div class="photo-upload-section" onclick="document.getElementById('studentPhoto').click()">
                         <div class="upload-icon"><i class="fas fa-camera"></i></div>
-                        <div class="upload-text">Click to upload photo (413 × 531 px)</div>
-                        <input type="file" id="studentPhoto" accept="image/*" class="hidden">
+                        <div class="upload-text">Click to upload (413 × 531 px)</div>
+                        <input type="file" id="studentPhoto" accept="image/*" style="display:none">
                     </div>
-                    <div id="studentPhotoPreview" class="photo-preview"></div>
-                </div>
-
-                <div class="form-group">
-                    <label>Father Photo</label>
-                    <div class="photo-upload-section" onclick="document.getElementById('fatherPhoto').click()">
-                        <div class="upload-icon"><i class="fas fa-camera"></i></div>
-                        <div class="upload-text">Click to upload photo</div>
-                        <input type="file" id="fatherPhoto" accept="image/*" class="hidden">
-                    </div>
-                    <div id="fatherPhotoPreview" class="photo-preview"></div>
+                    <div id="studentPhotoPreview"></div>
                 </div>
 
                 <div class="form-group">
                     <label>Mother Photo <span class="required">*</span></label>
                     <div class="photo-upload-section" onclick="document.getElementById('motherPhoto').click()">
                         <div class="upload-icon"><i class="fas fa-camera"></i></div>
-                        <div class="upload-text">Click to upload photo</div>
-                        <input type="file" id="motherPhoto" accept="image/*" class="hidden">
+                        <input type="file" id="motherPhoto" accept="image/*" style="display:none">
                     </div>
-                    <div id="motherPhotoPreview" class="photo-preview"></div>
+                    <div id="motherPhotoPreview"></div>
                 </div>
 
                 <div class="form-group">
-                    <label>Father Name</label>
-                    <input type="text" id="fatherName">
-                </div>
-
-                <div class="form-group">
-                    <label>Father Contact (WhatsApp)</label>
-                    <input type="tel" id="fatherContact">
+                    <label>Father Photo</label>
+                    <div class="photo-upload-section" onclick="document.getElementById('fatherPhoto').click()">
+                        <div class="upload-icon"><i class="fas fa-camera"></i></div>
+                        <input type="file" id="fatherPhoto" accept="image/*" style="display:none">
+                    </div>
+                    <div id="fatherPhotoPreview"></div>
                 </div>
 
                 <div class="form-group">
@@ -135,13 +107,23 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Father Name</label>
+                    <input type="text" id="fatherName">
+                </div>
+
+                <div class="form-group">
+                    <label>Father Contact</label>
+                    <input type="tel" id="fatherContact">
+                </div>
+
+                <div class="form-group">
                     <label>Email Address</label>
                     <input type="email" id="emailAddress">
                 </div>
                 
                 <div class="form-actions">
                     <button type="submit" id="submitBtn">Submit</button>
-                    <button type="reset" id="resetBtn" onclick="location.reload()">Clear</button>
+                    <button type="reset" onclick="location.reload()">Clear</button>
                 </div>
             </form>
         </div>
@@ -149,46 +131,38 @@
 
     <div class="modal" id="successModal">
         <div class="modal-content">
-            <div class="text-5xl text-green-500 mb-4"><i class="fas fa-check-circle"></i></div>
-            <div class="text-xl font-bold mb-2">Success!</div>
+            <i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i>
+            <h2 class="text-xl font-bold mb-2">Success!</h2>
             <p class="mb-6">Registration submitted successfully.</p>
-            <button class="modal-button" onclick="location.reload()">Done</button>
+            <button class="bg-indigo-600 text-white px-8 py-2 rounded" onclick="location.reload()">Done</button>
         </div>
     </div>
 
     <script>
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCdnEBCO5AIomiGssrUIF8Q430UNTKZ1hYluo0O5_UH55PAFZaFaktDfqV7S4ylhb6/exec";
 
-        const photoFields = {
-            'studentPhoto': 'studentPhotoPreview',
-            'fatherPhoto': 'fatherPhotoPreview',
-            'motherPhoto': 'motherPhotoPreview'
-        };
+        const photoData = { studentPhoto: "", fatherPhoto: "", motherPhoto: "" };
 
-        // FIX: Re-implemented Photo Handling logic to ensure Preview works
-        Object.keys(photoFields).forEach(fieldId => {
-            const input = document.getElementById(fieldId);
+        // Fix: Preview Logic and Canvas Resizing
+        ['studentPhoto', 'fatherPhoto', 'motherPhoto'].forEach(id => {
+            const input = document.getElementById(id);
             input.addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if (!file) return;
-
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     const img = new Image();
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
-                        canvas.width = 413;
-                        canvas.height = 531;
+                        canvas.width = 413; canvas.height = 531;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, 413, 531);
-                        const resized = canvas.toDataURL('image/jpeg', 0.9);
-                        
-                        document.getElementById(photoFields[fieldId]).innerHTML = `
-                            <img src="${resized}" class="preview-image">
-                            <div class="preview-info">✓ Photo ready</div>
-                            <button type="button" class="remove-photo" onclick="document.getElementById('${fieldId}').value=''; document.getElementById('${photoFields[fieldId]}').innerHTML=''">Remove</button>
+                        const base64 = canvas.toDataURL('image/jpeg', 0.9);
+                        photoData[id] = base64;
+                        document.getElementById(id + 'Preview').innerHTML = `
+                            <img src="${base64}" class="preview-image">
+                            <button type="button" class="remove-photo" onclick="removePhoto('${id}')">Remove</button>
                         `;
-                        input.dataset.resized = resized;
                     };
                     img.src = event.target.result;
                 };
@@ -196,12 +170,17 @@
             });
         });
 
+        function removePhoto(id) {
+            photoData[id] = "";
+            document.getElementById(id).value = "";
+            document.getElementById(id + 'Preview').innerHTML = "";
+        }
+
         document.getElementById('escortCardForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner"></span>Submitting...';
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Submitting...';
 
             const payload = {
                 timestamp: new Date().toLocaleString('en-IN'),
@@ -213,25 +192,23 @@
                 motherName: document.getElementById('motherName').value,
                 motherContact: document.getElementById('motherContact').value,
                 emailAddress: document.getElementById('emailAddress').value,
-                studentPhotoBase64: document.getElementById('studentPhoto').dataset.resized || "",
-                fatherPhotoBase64: document.getElementById('fatherPhoto').dataset.resized || "",
-                motherPhotoBase64: document.getElementById('motherPhoto').dataset.resized || ""
+                studentPhotoBase64: photoData.studentPhoto,
+                fatherPhotoBase64: photoData.fatherPhoto,
+                motherPhotoBase64: photoData.motherPhoto
             };
 
             try {
-                // Sending JSON to fixed backend
                 await fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
                 document.getElementById('successModal').classList.add('show');
-            } catch (error) {
-                alert("Error: " + error.message);
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Submit';
+            } catch (err) {
+                alert("Submission failed: " + err.message);
+                btn.disabled = false;
+                btn.innerHTML = "Submit";
             }
         });
     </script>
