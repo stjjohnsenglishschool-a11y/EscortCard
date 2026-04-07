@@ -542,37 +542,34 @@
     </div>
 
     <script>
-        // UPDATE THIS WITH YOUR ACTUAL DEPLOYED URL
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCdnEBCO5AIomiGssrUIF8Q430UNTKZ1hYluo0O5_UH55PAFZaFaktDfqV7S4ylhb6/exec";
-        
-        const photoFields = {
-            'studentPhoto': { previewId: 'studentPhotoPreview', errorId: 'studentPhotoError' },
-            'fatherPhoto': { previewId: 'fatherPhotoPreview', errorId: 'fatherPhotoError' },
-            'motherPhoto': { previewId: 'motherPhotoPreview', errorId: 'motherPhotoError' }
-        };
+    // 1. UPDATE THIS URL
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCdnEBCO5AIomiGssrUIF8Q430UNTKZ1hYluo0O5_UH55PAFZaFaktDfqV7S4ylhb6/exec";
+    
+    const photoFields = {
+        'studentPhoto': { previewId: 'studentPhotoPreview', errorId: 'studentPhotoError' },
+        'fatherPhoto': { previewId: 'fatherPhotoPreview', errorId: 'fatherPhotoError' },
+        'motherPhoto': { previewId: 'motherPhotoPreview', errorId: 'motherPhotoError' }
+    };
 
-        function autoCapitalize(input) {
-            input.addEventListener('blur', function() {
-                if (this.value.trim()) {
-                    this.value = this.value.trim().split(' ').map(word => 
-                        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                    ).join(' ');
-                }
-            });
-        }
-
-        autoCapitalize(document.getElementById('studentName'));
-        autoCapitalize(document.getElementById('fatherName'));
-        autoCapitalize(document.getElementById('motherName'));
-
-        Object.keys(photoFields).forEach(fieldId => {
-            const input = document.getElementById(fieldId);
-            input.addEventListener('change', function(e) {
-                handlePhotoUpload(e, photoFields[fieldId]);
-            });
+    // Auto-capitalize function
+    function autoCapitalize(input) {
+        input.addEventListener('blur', function() {
+            if (this.value.trim()) {
+                this.value = this.value.trim().split(' ').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                ).join(' ');
+            }
         });
+    }
 
-        function handlePhotoUpload(e, field) {
+    autoCapitalize(document.getElementById('studentName'));
+    autoCapitalize(document.getElementById('fatherName'));
+    autoCapitalize(document.getElementById('motherName'));
+
+    // Handle Photo uploads
+    Object.keys(photoFields).forEach(fieldId => {
+        const input = document.getElementById(fieldId);
+        input.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
 
@@ -580,134 +577,93 @@
             reader.onload = function(event) {
                 const img = new Image();
                 img.onload = function() {
-                    const resizedImage = resizeImage(img, 413, 531);
-                    const previewDiv = document.getElementById(field.previewId);
+                    // Standard resize logic
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 413;
+                    canvas.height = 531;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(0, 0, 413, 531);
+                    ctx.drawImage(img, 0, 0, 413, 531);
+                    
+                    const resizedData = canvas.toDataURL('image/jpeg', 0.9);
+                    
+                    // Show Preview
+                    const previewDiv = document.getElementById(photoFields[fieldId].previewId);
                     previewDiv.innerHTML = `
-                        <img src="${resizedImage}" class="preview-image" alt="Preview">
-                        <div class="preview-info">✓ Photo ready (413 × 531 px)</div>
-                        <button type="button" class="remove-photo" onclick="removePhoto('${e.target.id}')">Remove Photo</button>
+                        <img src="${resizedData}" class="preview-image">
+                        <div class="preview-info">✓ Ready</div>
+                        <button type="button" class="remove-photo" onclick="removePhoto('${fieldId}')">Remove</button>
                     `;
-                    clearError(field.errorId);
-                    e.target.dataset.resized = resizedImage;
+                    
+                    // Store the data on the element for submission
+                    input.dataset.resized = resizedData;
                 };
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
-        }
-
-        function resizeImage(img, targetWidth, targetHeight) {
-            const canvas = document.createElement('canvas');
-            canvas.width = targetWidth;
-            canvas.height = targetHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(0, 0, targetWidth, targetHeight);
-            ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-            return canvas.toDataURL('image/jpeg', 0.9);
-        }
-
-        function removePhoto(fieldId) {
-            document.getElementById(fieldId).value = '';
-            document.getElementById(fieldId).dataset.resized = '';
-            const field = photoFields[fieldId];
-            document.getElementById(field.previewId).innerHTML = '';
-        }
-
-        function validatePhoneNumber(phone) {
-            const phoneRegex = /^[0-9]{10}$/;
-            return phoneRegex.test(phone.replace(/\D/g, ''));
-        }
-
-        function validateEmail(email) {
-            if (!email) return true;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        function showError(fieldId, message) {
-            const errorDiv = document.getElementById(fieldId + 'Error');
-            const inputField = document.getElementById(fieldId);
-            if (errorDiv && inputField) {
-                errorDiv.textContent = message;
-                errorDiv.classList.add('show');
-                inputField.classList.add('error');
-            }
-        }
-
-        function clearError(errorId) {
-            const errorDiv = document.getElementById(errorId);
-            const fieldId = errorId.replace('Error', '');
-            const inputField = document.getElementById(fieldId);
-            if (errorDiv) errorDiv.classList.remove('show');
-            if (inputField) inputField.classList.remove('error');
-        }
-
-        function validateForm() {
-            let isValid = true;
-            if (!document.getElementById('studentName').value.trim()) { showError('studentName', 'Required'); isValid = false; }
-            if (!document.getElementById('studentClass').value) { showError('studentClass', 'Required'); isValid = false; }
-            if (!document.getElementById('rollNumber').value.trim()) { showError('rollNumber', 'Required'); isValid = false; }
-            if (!document.getElementById('studentPhoto').dataset.resized) { showError('studentPhoto', 'Photo required'); isValid = false; }
-            if (!document.getElementById('motherPhoto').dataset.resized) { showError('motherPhoto', 'Photo required'); isValid = false; }
-            if (!document.getElementById('motherName').value.trim()) { showError('motherName', 'Required'); isValid = false; }
-            const mC = document.getElementById('motherContact').value.trim();
-            if (!mC || !validatePhoneNumber(mC)) { showError('motherContact', '10-digit mobile required'); isValid = false; }
-            return isValid;
-        }
-
-        // UPDATED SUBMISSION LOGIC
-        document.getElementById('escortCardForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            if (!validateForm()) return;
-
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner"></span>Submitting...';
-
-            const timestamp = new Date().toLocaleString('en-IN');
-
-            // Collect Data as a JSON Object
-            const payload = {
-                timestamp: timestamp,
-                studentName: document.getElementById('studentName').value.trim(),
-                studentClass: document.getElementById('studentClass').value,
-                rollNumber: document.getElementById('rollNumber').value.trim(),
-                fatherName: document.getElementById('fatherName').value.trim(),
-                fatherContact: document.getElementById('fatherContact').value.trim(),
-                motherName: document.getElementById('motherName').value.trim(),
-                motherContact: document.getElementById('motherContact').value.trim(),
-                emailAddress: document.getElementById('emailAddress').value.trim(),
-                studentPhotoBase64: document.getElementById('studentPhoto').dataset.resized || "",
-                fatherPhotoBase64: document.getElementById('fatherPhoto').dataset.resized || "",
-                motherPhotoBase64: document.getElementById('motherPhoto').dataset.resized || ""
-            };
-
-            try {
-                // Fetch using JSON mode
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Standard for GAS
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                // Show success immediately (no-cors prevents reading response body)
-                document.getElementById('escortCardForm').reset();
-                Object.keys(photoFields).forEach(id => document.getElementById(photoFields[id].previewId).innerHTML = '');
-                showModal('successModal');
-                
-            } catch (error) {
-                showErrorModal('Error: ' + error.message);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit';
-            }
         });
+    });
 
-        function showModal(modalId) { document.getElementById(modalId).classList.add('show'); }
-        function closeModal() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('show')); }
-        function showErrorModal(msg) { document.getElementById('errorModalMessage').textContent = msg; showModal('errorModal'); }
-    </script>
+    function removePhoto(fieldId) {
+        const input = document.getElementById(fieldId);
+        input.value = '';
+        input.dataset.resized = '';
+        document.getElementById(photoFields[fieldId].previewId).innerHTML = '';
+    }
+
+    // Submission Logic
+    document.getElementById('escortCardForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Basic validation check
+        if (!document.getElementById('studentName').value || !document.getElementById('studentPhoto').dataset.resized) {
+            alert("Please fill all required fields and upload photos.");
+            return;
+        }
+
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner"></span>Submitting...';
+
+        const payload = {
+            timestamp: new Date().toLocaleString('en-IN'),
+            studentName: document.getElementById('studentName').value.trim(),
+            studentClass: document.getElementById('studentClass').value,
+            rollNumber: document.getElementById('rollNumber').value.trim(),
+            fatherName: document.getElementById('fatherName').value.trim(),
+            fatherContact: document.getElementById('fatherContact').value.trim(),
+            motherName: document.getElementById('motherName').value.trim(),
+            motherContact: document.getElementById('motherContact').value.trim(),
+            emailAddress: document.getElementById('emailAddress').value.trim(),
+            studentPhotoBase64: document.getElementById('studentPhoto').dataset.resized || "",
+            fatherPhotoBase64: document.getElementById('fatherPhoto').dataset.resized || "",
+            motherPhotoBase64: document.getElementById('motherPhoto').dataset.resized || ""
+        };
+
+        try {
+            // SENDING AS JSON
+            await fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            // If no error, show success modal
+            document.getElementById('escortCardForm').reset();
+            Object.keys(photoFields).forEach(id => removePhoto(id));
+            document.getElementById('successModal').classList.add('show');
+            
+        } catch (error) {
+            alert("Error: " + error.message);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit';
+        }
+    });
+
+    function closeModal() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('show')); }
+</script>
 </body>
 </html>
